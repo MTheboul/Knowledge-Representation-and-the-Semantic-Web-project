@@ -3,6 +3,10 @@ from SPARQLWrapper import SPARQLWrapper, JSON
 #Extract the name of the resource from DBPedia
 def extractStringData(resources):
     values = []
+
+    if type(resources) != list:
+        resources = [resources]
+
     for resource in resources:
         name = str(resource).replace("http://dbpedia.org/resource/", "")
         name = name.replace("_", " ")
@@ -29,8 +33,8 @@ def getMovieWithInfo(movieTitle):
     response = sparqlMovieInput.queryAndConvert()
 
     bindings = convertJson(response)
-    movieResult = [bindings[0]['movie']['value']]
-    directorResult = [bindings[0]['director']['value']]
+    movieResult = bindings[0]['movie']['value']
+    directorResult = bindings[0]['director']['value']
 
     leadActors = []
     for actor in bindings:

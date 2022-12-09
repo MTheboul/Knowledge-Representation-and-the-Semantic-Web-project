@@ -42,8 +42,22 @@ def getDirectorandYear(movie = "Interstellar"):
   sparql.setQuery(queryString)
   result = sparql.queryAndConvert()
   printjson(result)
-  
-  print()
 
-getActorsAndRole()
-getDirectorandYear()
+def getRoleofActorFilter(movie = "Interstellar", actor = "Anne Hathaway"):
+  sparql = SPARQLWrapper("https://query.wikidata.org/sparql")
+  sparql.setReturnFormat(JSON)
+  queryString = """SELECT ?Movie ?nameOfRole ?name WHERE {
+    ?movie rdfs:label '""" + movie +"""'@en;
+          p:P161 ?member;
+          p:P1476 [ps:P1476 ?Movie].
+    
+    ?member pq:P453 [rdfs:label ?nameOfRole];
+            ps:P161 [rdfs:label ?name].
+  filter regex(?name, '""" + actor + """')
+  filter(lang(?name) ='en')
+  filter(lang(?nameOfRole) ='en')
+}"""
+
+  sparql.setQuery(queryString)
+  result = sparql.queryAndConvert()
+  printjson(result)

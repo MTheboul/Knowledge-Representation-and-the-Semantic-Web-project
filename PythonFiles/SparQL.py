@@ -1,27 +1,5 @@
 from SPARQLWrapper import SPARQLWrapper, JSON
-
-#Extract the name of the resource from DBPedia
-def extractStringData(resources):
-    values = []
-
-    if type(resources) != list:
-        resources = [resources]
-
-    for resource in resources:
-        name = str(resource).replace("http://dbpedia.org/resource/", "")
-        name = name.replace("_", " ")
-        values.append(name)
-
-    return values
-
-#Return bindings from response of sparql query
-def convertJson(result):
-    body = result.popitem() 
-
-    information = body[1]
-    bindings = information.get('bindings')
-
-    return bindings
+from JsonConversion import *
 
 #Fetch the movie resource and the leading actors from DBPedia with movieTitle as input
 def getMovieWithInfo(movieTitle):
@@ -40,9 +18,9 @@ def getMovieWithInfo(movieTitle):
     for actor in bindings:
         leadActors.append(actor['stars']['value'])
 
-    movieResult = extractStringData(movieResult)
-    directorResult = extractStringData(directorResult)
-    leadActors = extractStringData(leadActors)
+    movieResult = extractStringDataDBpedia(movieResult)
+    directorResult = extractStringDataDBpedia(directorResult)
+    leadActors = extractStringDataDBpedia(leadActors)
 
     movieWithActors = (movieResult, directorResult, leadActors)
     return movieWithActors
@@ -61,11 +39,11 @@ def getMoviesByActor(actorName):
     for movie in bindings:
         movies.append(movie['movies']['value'])
 
-    movies = extractStringData(movies)
+    movies = extractStringDataDBpedia(movies)
     return movies
 
 
-movieWithActors = getMovieWithInfo("Interstellar")
-print(movieWithActors)
-moviesFromActor = getMoviesByActor("Anne Hathaway")
-print(moviesFromActor)
+#movieWithActors = getMovieWithInfo("Interstellar")
+#print(movieWithActors)
+#moviesFromActor = getMoviesByActor("Anne Hathaway")
+#print(moviesFromActor)

@@ -67,7 +67,7 @@ def getRoleofActor(movie = "Interstellar", actor = "Anne Hathaway"):
   sparql.setQuery(queryString)
   result = sparql.queryAndConvert()
   roles = convertJson(result)
-  time.sleep(0.001) # risk of rejection from wikidata if to many querys to fast
+  time.sleep(0.5) # risk of rejection from wikidata if to many querys to fast
   
   return extractStringWikidata(roles)
 

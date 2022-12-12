@@ -1,6 +1,7 @@
 from SparQL import*
 from Wikidata import*
 from PredefinedQuestions import*
+import json
 
 def getActorInformation(actor):
     movies = getMoviesByActor(actor)
@@ -20,13 +21,18 @@ def getActorInformation(actor):
     information = {'Movie':rolesInMovie, 'Information':getActorDetailedInformation(actor)}
     return information
     
-
-def getMovieInformation(movie ="Interstellar"):
+def getMovieInformation(movie ="Interstellar"): #TO DO
     Actor_role = getActorsAndRole(movie)
     print()
     
-def createQuiz():
-    data = getActorInformation("Brad Pitt")
+def createQuizActor(actor):
+    data = getActorInformation(actor)
+    quiz = createActorQuiz(data)
+    
+    return quiz
+
+def createQuizMovie(movie):
+    data = getMovieInformation(movie)
     quiz = createActorQuiz(data)
 
-createQuiz()
+createQuizActor("Brad Pitt")

@@ -1,36 +1,38 @@
-
 from datetime import datetime
+import json
+     
 def createActorQuiz(data):
-    questionAnswer = []
+    questionAnswer = {}
     movieBaseQuestions = [
-        "QNUM: Who did ACTOR play in MOVIE. ANUM: ROLEOFCHAR"
+        ["Question: Who did ACTOR play in MOVIE.", "Answer: ROLEOFCHAR"]
     ]
     personalBaseQuestions = [
-        "QNUM: Where was ACTOR born? ANUM: PLACEOFBIRTH",
-        "QNUM: When was ACTOR born? ANUM: YEAROFBIRTH",
-        "QNUM: How many children does ACTOR have? ANUM: NUMOFCHILDREN"
+        ["Question: Where was ACTOR born?", "Answer: PLACEOFBIRTH"],
+        ["Question: When was ACTOR born?", "Answer: YEAROFBIRTH"],
+        ["Question: How many children does ACTOR have?", "Answer: NUMOFCHILDREN"]
     ]
     movies = data['Movie']
     information = data['Information']
     i = 1
     for movieQues in movieBaseQuestions:
         for movInfo in movies:
-            movie = movieQues
-            movie = movie.replace("NUM", str(i), 2)
-            movie = movie.replace("MOVIE", movInfo[0][0])
-            movie = movie.replace("ROLEOFCHAR", movInfo[0][1])
-            movie = movie.replace("ACTOR", movInfo[0][2])
-            questionAnswer.append(movie)
+            question = movieQues[0]
+            question = question.replace("MOVIE", movInfo[0][0])
+            question = question.replace("ACTOR", movInfo[0][2])
+            answer = movieQues[1].replace("ROLEOFCHAR", movInfo[0][1])
+            
+            questionAnswer["Q" + str(i)] = [question, answer]
             i += 1
 
     for personal in personalBaseQuestions:
-        personal = personal.replace("NUM", str(i), 2)
-        personal = personal.replace("ACTOR", movInfo[0][2])
-        personal = personal.replace("NUMOFCHILDREN", information[0][0])
-        personal = personal.replace("YEAROFBIRTH", information[0][1].split("T")[0])
-        personal = personal.replace("PLACEOFBIRTH", information[0][2])
-        questionAnswer.append(personal)
-        i += 1
+        question = personal[0].replace("ACTOR", movInfo[0][2])
+        answer = personal[1]
+        answer = answer.replace("NUMOFCHILDREN", information[0][0])
+        answer = answer.replace("YEAROFBIRTH", information[0][1].split("T")[0])
+        answer = answer.replace("PLACEOFBIRTH", information[0][2])
 
-    return questionAnswer
+        questionAnswer["Q" + str(i)] = [question, answer]
+        i += 1
+    js = json.dumps(questionAnswer,indent=2)
+    return js
         

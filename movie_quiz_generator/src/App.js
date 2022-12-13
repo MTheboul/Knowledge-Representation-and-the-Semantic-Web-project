@@ -7,6 +7,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import QuizCard from "./QuizCard";
+import Config from "./config";
 
 function App() {
   const [quizData, setquizData] = useState({
@@ -27,7 +28,11 @@ function App() {
       >
         {quizData.started ? (
           <Container maxWidth="sm">
-            <Quiz updateQuizData={setquizData} />
+            <Quiz QuizData={quizData} updateQuizData={setquizData} />
+          </Container>
+        ) : quizData.started ? (
+          <Container maxWidth="sm">
+            <Quiz QuizData={quizData} updateQuizData={setquizData} />
           </Container>
         ) : (
           <Container>

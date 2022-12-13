@@ -1,36 +1,36 @@
 const questions = [
   {
-    title: "What's the national flower of Japan?",
+    title: "Who played Viktor Navorski in the movie Terminal(2004)?",
     options: [
       {
-        description: "Cherry Blossom",
+        description: "Tom Hanks",
       },
       {
-        description: "Rose",
+        description: "Robert De Niro",
       },
       {
-        description: "Jasmine",
+        description: "Leonardo DiCaprio",
       },
       {
-        description: "Lavender",
+        description: "Morgan Freeman",
       },
     ],
     correctAnswer: 1,
   },
   {
-    title: "What's the national animal of Australia?",
+    title: "Who directed the movie Terminal(2004)?",
     options: [
       {
-        description: "Lion",
+        description: "Robert Altman",
       },
       {
-        description: "Cat",
+        description: "Werner Herzog",
       },
       {
-        description: "Red Kangaroo",
+        description: "Steven Spielberg",
       },
       {
-        description: "Elephant",
+        description: "Jean-Luc Godard",
       },
     ],
     correctAnswer: 3,

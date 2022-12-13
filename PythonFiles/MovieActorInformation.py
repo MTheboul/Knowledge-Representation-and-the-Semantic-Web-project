@@ -53,5 +53,3 @@ def createQuizMovie(movie):
     quiz = createMovieQuiz(data)
 
     return quiz
-
-createQuizActor("Anne Hathaway")

@@ -1,5 +1,4 @@
 from SPARQLWrapper import SPARQLWrapper, JSON
-from JsonConversion import *
 import time
 
 #Get all actors and their role name from a movie.
@@ -100,3 +99,35 @@ def getActorDetailedInformation(actor):
   roles = convertJson(result)
   
   return extractStringWikidata(roles)
+
+def convertJson(result):
+  body = result.popitem() 
+  information = body[1]
+  bindings = information.get('bindings')
+  return bindings
+
+def extractStringWikidata(resources):
+    values = []
+    if(len(resources) == 0): return values
+    keys = resources[0].keys()
+    if type(resources) != list:
+        resources = [resources]
+
+    if(len(keys) > 1):
+        value = []
+    else:
+        value = ""
+
+    for resource in resources:
+        for key in keys:
+            if(type(value) == list):
+                value.append(resource[key]['value'])
+            else:
+                value = resource[key]['value']
+        values.append(value)
+        if(type(value) == list):
+            value = []
+        else:
+            value = ""
+
+    return values

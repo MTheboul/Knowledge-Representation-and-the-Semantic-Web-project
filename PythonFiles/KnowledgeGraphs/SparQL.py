@@ -1,12 +1,15 @@
 from SPARQLWrapper import SPARQLWrapper, JSON
 from JsonConversion import *
 
-#Fetch the movie resource and the leading actors from DBPedia with movieTitle as input
+# Fetch the movie resource and the leading actors from DBPedia with movieTitle as input
+
+
 def getMovieWithInfo(movieTitle):
     sparqlMovieInput = SPARQLWrapper("http://dbpedia.org/sparql")
     sparqlMovieInput.setReturnFormat(JSON)
 
-    queryString = "SELECT ?movie ?stars ?director {?movie rdf:type dbo:Film ; dbo:starring ?stars ; dbo:director ?director ; dbp:name ?title FILTER(?title = " + '"' + movieTitle + '"' + "@en)}"
+    queryString = "SELECT ?movie ?stars ?director {?movie rdf:type dbo:Film ; dbo:starring ?stars ; dbo:director ?director ; dbp:name ?title FILTER(?title = " + \
+        '"' + movieTitle + '"' + "@en)}"
     sparqlMovieInput.setQuery(queryString)
     response = sparqlMovieInput.queryAndConvert()
 
@@ -25,12 +28,15 @@ def getMovieWithInfo(movieTitle):
     movieWithActors = (movieResult, directorResult, leadActors)
     return movieWithActors
 
-#Fetch movies that a certain actor has had a starring role in
+# Fetch movies that a certain actor has had a starring role in
+
+
 def getMoviesByActor(actorName):
     sparqlMoviesByActorInput = SPARQLWrapper("http://dbpedia.org/sparql")
     sparqlMoviesByActorInput.setReturnFormat(JSON)
 
-    queryString = "SELECT ?movies {?movies rdf:type dbo:Film ; dbp:starring ?star FILTER(?star = " + '"' + actorName + '"' + "@en)}"
+    queryString = "SELECT ?movies {?movies rdf:type dbo:Film ; dbp:starring ?star FILTER(?star = " + \
+        '"' + actorName + '"' + "@en)}"
     sparqlMoviesByActorInput.setQuery(queryString)
     response = sparqlMoviesByActorInput.queryAndConvert()
 
@@ -44,6 +50,6 @@ def getMoviesByActor(actorName):
 
 
 #movieWithActors = getMovieWithInfo("Interstellar")
-#print(movieWithActors)
+# print(movieWithActors)
 #moviesFromActor = getMoviesByActor("Anne Hathaway")
-#print(moviesFromActor)
+# print(moviesFromActor)

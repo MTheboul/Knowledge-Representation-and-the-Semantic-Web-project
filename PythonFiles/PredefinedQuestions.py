@@ -5,7 +5,7 @@ import json
 def createActorQuiz(data):
     questionAnswer = {}
     movieBaseQuestions = [
-        ["Question: Who did ACTOR play in MOVIE.", "Answer: ROLEOFCHAR"]
+        ["Question: In MOVIE who did ACTOR play?", "Answer: ROLEOFCHAR"]
     ]
     personalBaseQuestions = [
         ["Question: Where was ACTOR born?", "Answer: PLACEOFBIRTH"],
@@ -41,14 +41,14 @@ def createActorQuiz(data):
 def createMovieQuiz(data):
     questionAnswer = {}
     actorBaseQuestions = [
-        ["Question: Who did ACTOR play in MOVIE.", "Answer: ROLEOFCHAR"],
-        ["Question: Who played ROLEOFCHAR play in MOVIE.", "Answer: ACTOR"]
+        ["Question: Who did ACTOR play in MOVIE?", "Answer: ROLEOFCHAR"],
+        ["Question: Who played ROLEOFCHAR play in MOVIE?", "Answer: ACTOR"]
     ]
     directorBaseQuestions = [
-         ["Question: Who directed MOVIE.", "Answer: DIRECTOR"]
+         ["Question: Who directed MOVIE?", "Answer: DIRECTOR"]
     ]
     genreBaseQuestions = [
-        ["Question: What Genre is MOVIE.", "Answer: GENRE"]
+        ["Question: What Genre is MOVIE?", "Answer: GENRE"]
     ]
     generalMovieBaseQuestions = [
         ["Question: When was MOVIE released?", "Answer: RELEASEYEAR"],

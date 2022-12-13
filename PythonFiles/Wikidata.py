@@ -3,7 +3,7 @@ from JsonConversion import *
 import time
 
 #Get all actors and their role name from a movie.
-def getActorsAndRole(movie = "Interstellar"):
+def getActorsAndRole(movie):
   sparql = SPARQLWrapper("https://query.wikidata.org/sparql")
   sparql.setReturnFormat(JSON)
   queryString = """SELECT ?nameOfRole ?name WHERE {
@@ -24,32 +24,42 @@ def getActorsAndRole(movie = "Interstellar"):
 
   return extractStringWikidata(roles)
 
-
-
-#Get director and movie realese year from wikidata.
-def getDirectorandYear(movie = "Interstellar"):
+#get movie realese year from wikidata (only get the first relese date).
+def getMovieReleaseYear(movie):
   sparql = SPARQLWrapper("https://query.wikidata.org/sparql")
   sparql.setReturnFormat(JSON)
-  queryString = """SELECT ?date ?director WHERE {
-  ?movie rdfs:label '""" + movie + """'@en;
-         p:P577 [ps:P577 ?date];
-         p:P57 [ps:P57 [rdfs:label ?director]].
-  filter(lang(?director)='en')
-}"""
-
+  queryString = """
+    select ?date where{
+    ?movie rdfs:label '""" + movie + """'@en;
+           p:P31 [ps:P31 wd:Q11424];
+           p:P577 [ps:P577 ?date].
+      }limit 1
+      """
   sparql.setQuery(queryString)
   result = sparql.queryAndConvert()
-  direc_year = convertJson(result)
-  time.sleep(0.001) # risk of rejection from wikidata if to many querys to fast
-  
-  return extractStringWikidata(direc_year)
+  year = convertJson(result)
+  return extractStringWikidata(year)
 
-
-#Filter an specific actor from a movie.
-def getRoleofActor(movie = "Interstellar", actor = "Anne Hathaway"):
+#Get Genre of movie
+def getMovieGenre(movie):
   sparql = SPARQLWrapper("https://query.wikidata.org/sparql")
   sparql.setReturnFormat(JSON)
+  queryString = """SELECT ?genre WHERE {
+    ?movie rdfs:label '""" + movie + """'@en;
+           p:P31 [ps:P31 wd:Q11424];
+           p:P136 [ps:P136 [rdfs:label ?genre]].
+      filter (lang(?genre) = 'en')
+  }"""
+  sparql.setQuery(queryString)
+  result = sparql.queryAndConvert()
+  genre = convertJson(result)
+  return extractStringWikidata(genre)
 
+#Filter an specific actor from a movie.
+def getRoleOfActor(movie, actor):
+  sparql = SPARQLWrapper("https://query.wikidata.org/sparql")
+  sparql.setReturnFormat(JSON)
+  time.sleep(1) # risk of rejection from wikidata if to many querys to fast
   queryString = """SELECT ?Movie ?nameOfRole ?name WHERE {
     ?movie rdfs:label """
   queryString += '"' + movie + '"'
@@ -67,7 +77,7 @@ def getRoleofActor(movie = "Interstellar", actor = "Anne Hathaway"):
   sparql.setQuery(queryString)
   result = sparql.queryAndConvert()
   roles = convertJson(result)
-  time.sleep(0.5) # risk of rejection from wikidata if to many querys to fast
+  
   
   return extractStringWikidata(roles)
 

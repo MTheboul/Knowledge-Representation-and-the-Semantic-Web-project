@@ -1,11 +1,10 @@
-from SparQL import*
-from Wikidata import*
+from KnowledgeGraphs import SparQL, Wikidata
 from PredefinedQuestions import*
 
 #Collects information from diffrent datasources about a specific Actor
 def getActorInformation(actor):
     #dbpedia get movies the actor have starred in
-    movies = getMoviesByActor(actor)
+    movies = SparQL.getMoviesByActor(actor)
     
     rolesInMovie = []
     for movie in movies:
@@ -14,29 +13,29 @@ def getActorInformation(actor):
             tmp = movie.split("(")
             tmp = tmp[0].strip()
             #wikidata get role of the actor
-            value = getRoleOfActor(tmp, actor)
+            value = Wikidata.getRoleOfActor(tmp, actor)
         else:
-            value = getRoleOfActor(movie, actor)
+            value = Wikidata.getRoleOfActor(movie, actor)
         if(len(value) > 0):
             rolesInMovie.append(value)
     #get personal information about actor and combine all info
-    return {'Movie':rolesInMovie, 'Information':getActorDetailedInformation(actor)}
+    return {'Movie':rolesInMovie, 'Information':Wikidata.getActorDetailedInformation(actor)}
 
 #Collects information from diffrent datasources about a specific Movie
 def getMovieInformation(movie):
     #dbpedia
-    movieInfo = list(getMovieWithInfo(movie))
+    movieInfo = list(SparQL.getMovieWithInfo(movie))
     i = 0
     for actor in movieInfo[2]:
         #wikidata get role of the actor
-        movieActorAndRole = getRoleOfActor(movie, actor)
+        movieActorAndRole = Wikidata.getRoleOfActor(movie, actor)
         actorAndRole = movieActorAndRole.pop() #Remove outer list
         actorAndRole.remove(movie) #Remove title
         movieInfo[2][i] = actorAndRole #add to movieinfo
         i += 1
     #wikidata get movie genres and realise year
-    genre = getMovieGenre(movie)
-    year = getMovieReleaseYear(movie) 
+    genre = Wikidata.getMovieGenre(movie)
+    year = Wikidata.getMovieReleaseYear(movie) 
 
     return {'Title':movie, 'Director':movieInfo[1], 'ActorAndRole':movieInfo[2], 'Genre':genre, 'General Info':year} #add more to general info?
 

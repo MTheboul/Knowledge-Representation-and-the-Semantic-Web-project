@@ -1,7 +1,6 @@
-from datetime import datetime
 import json
 
-#Structrued like this to easy add/remove questions if new infor added
+#Structrued like this to easy add/remove questions if new infor added (hopefully)
 def createActorQuiz(data):
     questionAnswer = {}
     movieBaseQuestions = [

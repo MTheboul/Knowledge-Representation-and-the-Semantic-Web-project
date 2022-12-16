@@ -3,18 +3,18 @@ import { CssBaseline, Box, Container } from "@mui/material";
 
 import QuestionCard from "./QuestionCard";
 import Result from "./Result";
-import questions from "./data/questions";
 
 function Quiz(props) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState([]);
-  const finishedQuiz = currentQuestionIndex === questions.length;
-  const currentQuestion = questions[currentQuestionIndex];
+  const finishedQuiz = currentQuestionIndex === props.quizData.questions.length;
+  const currentQuestion = props.quizData.questions[currentQuestionIndex];
 
   const quitQuiz = () => {
     props.updateQuizData((prevState) => ({
       ...prevState,
       started: false,
+      config: false,
     }));
   };
 
@@ -46,6 +46,7 @@ function Quiz(props) {
           {finishedQuiz ? (
             <Result
               restartQuiz={restartQuiz}
+              questions={props.quizData.questions}
               answers={answers}
               quitQuiz={quitQuiz}
             />

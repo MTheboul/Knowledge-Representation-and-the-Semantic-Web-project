@@ -7,16 +7,14 @@ import {
   Button,
 } from "@mui/material";
 
-import questions from "./data/questions";
-
 export default function Result(props) {
-  const { answers, restartQuiz, quitQuiz } = props;
+  const { answers, restartQuiz, quitQuiz, questions } = props;
 
   const correctAnswers = useMemo(() => {
     return questions.filter((q, i) => {
       return q.correctAnswer === parseInt(answers[i]);
     }).length;
-  }, [answers]);
+  }, [answers, questions]);
 
   return (
     <Card variant="outlined" sx={{ pt: 3, pb: 3 }}>

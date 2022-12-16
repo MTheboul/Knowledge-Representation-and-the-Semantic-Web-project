@@ -8,11 +8,11 @@ import { CardMedia, CardActionArea } from "@mui/material";
 export default function QuizCard(props) {
   const { subject, description, imagePath } = props;
 
-  const handleStart = () => {
+  const handleConfig = () => {
     props.updateQuizData((prevState) => ({
       ...prevState,
-      subject: { subject },
-      started: true,
+      subject: subject,
+      config: true,
     }));
   };
 
@@ -25,7 +25,7 @@ export default function QuizCard(props) {
             height="300"
             image={imagePath}
             alt={subject}
-            onClick={handleStart}
+            onClick={handleConfig}
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">

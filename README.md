@@ -1,4 +1,5 @@
 # Knowledge-Representation-and-the-Semantic-Web-project
+FOR BOTH RUN VS CODE OR OTHER SOFTWARE AS ADMINISTRATOR
 
 TO RUN THE WEB APPLICATION:
 1. Install node.js https://nodejs.org/en/download/

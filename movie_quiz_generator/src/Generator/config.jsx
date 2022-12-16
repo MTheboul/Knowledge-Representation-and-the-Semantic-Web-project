@@ -12,7 +12,6 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import Autocomplete from "@mui/material/Autocomplete";
 import top100Films from "../Data/movie";
 import axios from "axios";
-import { grey } from "@mui/material/colors";
 import { Stack } from "@mui/system";
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -24,9 +23,8 @@ export default function Config(props) {
   const [textInput, setTextInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  let menuItems = [];
-
   const handleTextInputChange = (event) => {
+    console.log(event.target.value);
     setTextInput(event.target.value);
   };
 
@@ -36,7 +34,7 @@ export default function Config(props) {
       .get(
         "http://127.0.0.1:5000/createQuiz" +
           quizData.subject +
-          "?name=Interstellar" +
+          "?name=" +
           textInput
       )
       .then((data) => {

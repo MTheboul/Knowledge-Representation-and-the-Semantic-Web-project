@@ -58,19 +58,30 @@ def getMovieGenre(movie):
 def getRoleOfActor(movie, actor):
   sparql = SPARQLWrapper("https://query.wikidata.org/sparql")
   sparql.setReturnFormat(JSON)
-  time.sleep(1) # risk of rejection from wikidata if to many querys to fast
-  queryString = """SELECT ?Movie ?nameOfRole ?name WHERE {
-    ?movie rdfs:label """
-  queryString += '"' + movie + '"'
-  queryString +="""@en;
-          p:P161 ?member;
-          p:P1476 [ps:P1476 ?Movie].
+  lenght = len(movie) #there is an upperlimit on the number of chars in the query around 15 of the unions are possible with almost any name
+  queryString = """SELECT ?Movie ?nameOfRole ?name WHERE { { """
+  if (len(movie) > 1): # One actor from multiple movies
+    for i in range(lenght):
+      movie[i] = movie[i].split("(")[0].strip() # remove dbpedia (film) info
+      queryString += """SELECT ?Movie ?nameOfRole ?name WHERE {?movie rdfs:label """
+      queryString += '"' + movie[i] + '"'
+      # ugly this way but needed to save chars in the query
+      queryString +="""@en;p:P161 ?member;p:P1476 [ps:P1476 ?Movie].?member pq:P453 [rdfs:label ?nameOfRole];ps:P161 [rdfs:label ?name]. filter(lang(?nameOfRole) ='en') filter regex(?name, '""" + actor + """') }limit 1"""
+      if(i != lenght-1):
+        queryString += """ } union { """
+      else:
+        queryString += """} }"""
+  else: # get all actors in one movie
+    movie = movie.split("(")[0].strip() # remove dbpedia (film) info
+    queryString = """SELECT ?Movie ?nameOfRole ?name WHERE { 
+    ?movie rdfs:label '"""+ movie + """'@en;
+           p:P161 ?member;
+           p:P1476 [ps:P1476 ?Movie].
     
     ?member pq:P453 [rdfs:label ?nameOfRole];
             ps:P161 [rdfs:label ?name].
-  filter regex(?name, '""" + actor + """')
-  filter(lang(?name) ='en')
-  filter(lang(?nameOfRole) ='en')
+    filter(lang(?name)='en')
+    filter(lang(?nameOfRole) ='en')
   }"""
 
   sparql.setQuery(queryString)
@@ -85,20 +96,20 @@ def getActorDetailedInformation(actor):
   sparql = SPARQLWrapper("https://query.wikidata.org/sparql")
   sparql.setReturnFormat(JSON)
 
-  queryString = """SELECT ?dateOfBirth ?placeOfBirth ?numberOfChildren ?height WHERE {
+  queryString = """SELECT ?dateOfBirth ?placeOfBirth ?numberOfChildren WHERE {
     ?actor rdfs:label '""" + actor + """'@en;
            p:P106 [ps:P106 wd:Q10800557];
            p:P569 [ps:P569 ?dateOfBirth];
-           p:P19 [ps:P19 [rdfs:label ?placeOfBirth]];
-           p:P1971 [ps:P1971 ?numberOfChildren].
+           p:P19 [ps:P19 [rdfs:label ?placeOfBirth]].
+  optional{ ?actor p:P1971 [ps:P1971 ?numberOfChildren]}.
   filter(lang(?placeOfBirth)='en')
-  }"""
+}"""
 
   sparql.setQuery(queryString)
   result = sparql.queryAndConvert()
   roles = convertJson(result)
-  
-  return extractStringWikidata(roles)
+  stringData = extractStringWikidata(roles)
+  return stringData
 
 def convertJson(result):
   body = result.popitem() 

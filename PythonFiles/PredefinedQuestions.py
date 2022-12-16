@@ -1,7 +1,7 @@
 import json
 
 #Structrued like this to easy add/remove questions if new infor added (hopefully)
-def createActorQuiz(data):
+def generateActorQuiz(data):
     questionAnswer = {}
     movieBaseQuestions = [
         ["Question: In MOVIE who did ACTOR play?", "Answer: ROLEOFCHAR"]
@@ -17,15 +17,15 @@ def createActorQuiz(data):
     for movieQues in movieBaseQuestions:
         for movInfo in movies:
             question = movieQues[0]
-            question = question.replace("MOVIE", movInfo[0][0])
-            question = question.replace("ACTOR", movInfo[0][2])
-            answer = movieQues[1].replace("ROLEOFCHAR", movInfo[0][1])
+            question = question.replace("MOVIE", movInfo[0])
+            question = question.replace("ACTOR", movInfo[2])
+            answer = movieQues[1].replace("ROLEOFCHAR", movInfo[1])
             
             questionAnswer["Q" + str(i)] = [question, answer]
             i += 1
 
     for personal in personalBaseQuestions:
-        question = personal[0].replace("ACTOR", movInfo[0][2])
+        question = personal[0].replace("ACTOR", movInfo[2])
         answer = personal[1]
         answer = answer.replace("NUMOFCHILDREN", information[0][0])
         answer = answer.replace("YEAROFBIRTH", information[0][1].split("T")[0])
@@ -37,7 +37,7 @@ def createActorQuiz(data):
     return json.dumps(questionAnswer,indent=2)
 
 #Structrued like this to easy add/remove questions if new infor added
-def createMovieQuiz(data):
+def generateMovieQuiz(data):
     questionAnswer = {}
     actorBaseQuestions = [
         ["Question: Who did ACTOR play in MOVIE?", "Answer: ROLEOFCHAR"],

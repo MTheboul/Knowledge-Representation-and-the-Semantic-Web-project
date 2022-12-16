@@ -6,7 +6,7 @@ def getMovieWithInfo(movieTitle):
     sparqlMovieInput = SPARQLWrapper("http://dbpedia.org/sparql")
     sparqlMovieInput.setReturnFormat(JSON)
 
-    queryString = "SELECT ?movie ?stars ?director {?movie rdf:type dbo:Film ; dbo:starring ?stars ; dbo:director ?director ; dbp:name ?title; rdfs:label ?label. FILTER(?title='The Godfather'@en) Filter(?label ='The Godfather'@en)}"
+    queryString = "SELECT ?movie ?stars ?director {?movie rdf:type dbo:Film ; dbo:starring ?stars ; dbo:director ?director ; dbp:name ?title FILTER(?title = " + '"' + movieTitle + '"' + "@en)}"
     sparqlMovieInput.setQuery(queryString)
     response = sparqlMovieInput.queryAndConvert()
 

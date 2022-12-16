@@ -27,8 +27,19 @@ def getMovieInformation(movie):
     movieInfo = list(SparQL.getMovieWithInfo(movie))
     i = 0
     for actor in movieInfo[2]:
-        #wikidata get role of the actor
-        movieActorAndRole = Wikidata.getRoleOfActor(movie, actor)
+        # error handlning
+        if("(" in actor):
+            tmp = actor.split("(")
+            tmp = tmp[0].strip()
+            #wikidata get role of the actor
+            movieActorAndRole = Wikidata.getRoleOfActor(movie, tmp)
+        else:
+            movieActorAndRole = Wikidata.getRoleOfActor(movie, actor)
+
+        #no role or actor result
+        if(movieActorAndRole == []):
+            movieInfo[2].remove(actor)
+            continue
         actorAndRole = movieActorAndRole.pop() #Remove outer list
         actorAndRole.remove(movie) #Remove title
         movieInfo[2][i] = actorAndRole #add to movieinfo

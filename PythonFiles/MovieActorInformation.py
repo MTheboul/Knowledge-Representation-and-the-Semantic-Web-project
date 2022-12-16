@@ -5,44 +5,36 @@ from PredefinedQuestions import*
 def getActorInformation(actor):
     #dbpedia get movies the actor have starred in
     movies = SparQL.getMoviesByActor(actor)
-    
+
     rolesInMovie = []
-    for movie in movies:
-        value = []
-        if("(" in movie):
-            tmp = movie.split("(")
-            tmp = tmp[0].strip()
-            #wikidata get role of the actor
-            value = Wikidata.getRoleOfActor(tmp, actor)
-        else:
-            value = Wikidata.getRoleOfActor(movie, actor)
-        if(len(value) > 0):
-            rolesInMovie.append(value)
-    #get personal information about actor and combine all info
+    #If the actor has done more than 15 movies we need to do mutiple queries
+    if(len(movies) < 15):
+        #wikidata get role of the actor
+        rolesInMovie = Wikidata.getRoleOfActor(movies, actor)
+    else:
+        while(len(movies)>0):
+            tmpList = movies[0:15]
+            movies = movies[15:len(movies)-1]
+            roles = Wikidata.getRoleOfActor(tmpList, actor)
+            for role in roles:
+                rolesInMovie.append(role)
+
     return {'Movie':rolesInMovie, 'Information':Wikidata.getActorDetailedInformation(actor)}
 
 #Collects information from diffrent datasources about a specific Movie
 def getMovieInformation(movie):
     #dbpedia
     movieInfo = list(SparQL.getMovieWithInfo(movie))
-    i = 0
-    for actor in movieInfo[2]:
-        # error handlning
-        if("(" in actor):
-            tmp = actor.split("(")
-            tmp = tmp[0].strip()
-            #wikidata get role of the actor
-            movieActorAndRole = Wikidata.getRoleOfActor(movie, tmp)
-        else:
-            movieActorAndRole = Wikidata.getRoleOfActor(movie, actor)
 
-        #no role or actor result
-        if(movieActorAndRole == []):
-            movieInfo[2].remove(actor)
-            continue
-        actorAndRole = movieActorAndRole.pop() #Remove outer list
-        actorAndRole.remove(movie) #Remove title
-        movieInfo[2][i] = actorAndRole #add to movieinfo
+    # Gets all actors and roles avalible for the movie
+    movieActorAndRole = Wikidata.getActorsAndRoles(movie)
+    i = 0
+    # Only include leads
+    for actor in movieInfo[2]:
+        for roleAndActor in movieActorAndRole:
+            if(actor in roleAndActor):
+                movieInfo[2][i] = roleAndActor
+                break
         i += 1
     #wikidata get movie genres and realise year
     genre = Wikidata.getMovieGenre(movie)
@@ -54,13 +46,13 @@ def getMovieInformation(movie):
 #Move to API server thingy ma thing
 def createQuizActor(actor):
     data = getActorInformation(actor)
-    quiz = createActorQuiz(data)
+    quiz = generateActorQuiz(data)
     
     return quiz
 
 #Move to API server thingy ma thing
 def createQuizMovie(movie):
     data = getMovieInformation(movie)
-    quiz = createMovieQuiz(data)
+    quiz = generateMovieQuiz(data)
 
     return quiz

@@ -13,6 +13,8 @@ def generateActorQuiz(data):
     ]
     movies = data['Movie']
     information = data['Information']
+    if(len(information) < 3): # most of the time number of childern missing
+        information[0].insert(0, '0') # add that they have no childeren to start of list
     i = 1
     for movieQues in movieBaseQuestions:
         for movInfo in movies:
@@ -24,6 +26,8 @@ def generateActorQuiz(data):
             questionAnswer["Q" + str(i)] = [question, answer]
             i += 1
 
+    # Some inconsistencies can appear if Two or more actors have the exact same name and are both working as actors
+    # Not fixed
     for personal in personalBaseQuestions:
         question = personal[0].replace("ACTOR", movInfo[2])
         answer = personal[1]

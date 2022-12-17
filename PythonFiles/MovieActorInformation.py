@@ -28,14 +28,16 @@ def getMovieInformation(movie):
 
     # Gets all actors and roles avalible for the movie
     movieActorAndRole = Wikidata.getActorsAndRoles(movie)
-    i = 0
+    tmpRolActor = []
     # Only include leads
-    for actor in movieInfo[2]:
+    for i, actor in enumerate(movieInfo[2]):
         for roleAndActor in movieActorAndRole:
             if(actor in roleAndActor):
-                movieInfo[2][i] = roleAndActor
+                tmpRolActor.append(roleAndActor)
                 break
-        i += 1
+    
+    movieInfo[2] = tmpRolActor
+
     #wikidata get movie genres and realise year
     genre = Wikidata.getMovieGenre(movie)
     year = Wikidata.getMovieReleaseYear(movie) 

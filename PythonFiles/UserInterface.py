@@ -10,7 +10,7 @@ def capitilize(input):
 
 def __main__():
     print("************************\n****IMPORTANT NOTICE****\n************************")
-    print("Currently there is no major User input error handling, Make sure to spell the name of the actor or movie correct.\n")
+    print("Currently there is no major User input error handling, some invalid errors happends.\n")
     print("************************\n****IMPORTANT NOTICE****\n************************")
     print("Welcome")
     print("To generate questions about Actors enter 1 for Movies enter 2 to exit enter 3.\n")

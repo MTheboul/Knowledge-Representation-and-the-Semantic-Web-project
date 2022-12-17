@@ -46,18 +46,16 @@ def getMovieInformation(movie):
 #Move to API server thingy ma thing
 def createQuizActor(actor):
     liklySearchTerm = GoogleKnowledgeGraph.getMostLiklySearchTerm(actor, 'Person')
-    if(liklySearchTerm == "Bad Search Term"):
-        return json.dumps({"result":"Bad Search Term"}, indent=2) #To fix
     data = getActorInformation(liklySearchTerm)
     quiz = generateActorQuiz(data)
     
     return quiz
+    
 
 #Move to API server thingy ma thing
 def createQuizMovie(movie):
     liklySearchTerm = GoogleKnowledgeGraph.getMostLiklySearchTerm(movie, 'Movie')
-    if(liklySearchTerm == "Bad Search Term"):
-        return json.dumps({"result":"Bad Search Term"}, indent=2) #To fix
+    
     data = getMovieInformation(liklySearchTerm)
     quiz = generateMovieQuiz(data)
 

@@ -15,13 +15,19 @@ import axios from "axios";
 import { Stack } from "@mui/system";
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import top100actor from "../Data/actor";
 
 export default function Config(props) {
   const { quizData, updateQuizData } = props;
 
   const [disp, setDisp] = useState(false);
-  const [textInput, setTextInput] = useState("");
+  const [textInput, setTextInput] = useState(
+    quizData.subject === "Movie" ? top100Films[0].label : top100actor[0].label
+  );
   const [isLoading, setIsLoading] = useState(false);
+
+  const [value, setValue] = useState("");
+  const [inputValue, setInputValue] = useState("");
 
   const handleTextInputChange = (event) => {
     console.log(event.target.value);
@@ -93,13 +99,20 @@ export default function Config(props) {
           <Autocomplete
             disablePortal
             id={"combo-box-demo" + quizData.subject}
-            options={top100Films}
+            options={quizData.subject === "Movie" ? top100Films : top100actor}
             sx={{ width: 300 }}
+            value={value}
+            onChange={(event, newValue) => {
+              setValue(newValue);
+            }}
+            inputValue={inputValue}
+            onInputChange={(event, newInputValue) => {
+              setInputValue(newInputValue);
+            }}
             renderInput={(params) => (
               <TextField
                 {...params}
                 value={textInput}
-                onChange={handleTextInputChange}
                 label={quizData.subject}
               />
             )}
@@ -146,14 +159,14 @@ export default function Config(props) {
         <Button onClick={exportData} variant="outlined">
           Download
         </Button>
-        <Button
+        {/* <Button
           onClick={startQuiz}
           hidden={true}
           variant="outlined"
           // disabled={quizData.questions === {}}
         >
           Start
-        </Button>
+        </Button> */}
         <Button onClick={quitQuiz} variant="outlined">
           Quit
         </Button>

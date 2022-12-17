@@ -16,23 +16,24 @@ import { Stack } from "@mui/system";
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import top100actor from "../Data/actor";
+import ListItem from "@mui/material/ListItem";
+import List from "@mui/material/List";
+import Alert from "@mui/material/Alert";
+import IconButton from "@mui/material/IconButton";
+import Collapse from "@mui/material/Collapse";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function Config(props) {
   const { quizData, updateQuizData } = props;
 
   const [disp, setDisp] = useState(false);
+  const [error, setError] = useState("");
   const [textInput, setTextInput] = useState(
     quizData.subject === "Movie" ? top100Films[0].label : top100actor[0].label
   );
   const [isLoading, setIsLoading] = useState(false);
-
-  const [value, setValue] = useState("");
-  const [inputValue, setInputValue] = useState("");
-
-  const handleTextInputChange = (event) => {
-    console.log(event.target.value);
-    setTextInput(event.target.value);
-  };
+  const [succesOpen, setSuccesOpen] = useState(false);
+  const [errorOpen, setErrorOpen] = useState(false);
 
   const getQuiz = () => {
     setIsLoading(true);
@@ -48,12 +49,17 @@ export default function Config(props) {
           ...prevState,
           questions: data.data,
         }));
+        setSuccesOpen(true);
       })
       .catch((error) => {
         console.log(error);
+        setError(error);
+        setErrorOpen(true);
         // handle any errors/rejected Promises
       })
-      .finally(() => setIsLoading(false)); // complete loading success/fail
+      .finally(() => {
+        setIsLoading(false);
+      }); // complete loading success/fail
   };
 
   const quitQuiz = () => {
@@ -66,13 +72,13 @@ export default function Config(props) {
     }));
   };
 
-  const startQuiz = () => {
-    console.log(quizData.subject);
-    updateQuizData((prevState) => ({
-      ...prevState,
-      started: true,
-    }));
-  };
+  // const startQuiz = () => {
+  //   console.log(quizData.subject);
+  //   updateQuizData((prevState) => ({
+  //     ...prevState,
+  //     started: true,
+  //   }));
+  // };
 
   const exportData = () => {
     const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
@@ -86,7 +92,46 @@ export default function Config(props) {
   };
 
   return (
-    <Card variant="outlined" sx={{ pt: 3, pb: 3 }}>
+    <Card variant="outlined" sx={{ pb: 3 }}>
+      <Collapse in={succesOpen}>
+        <Alert
+          action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={() => {
+                setSuccesOpen(false);
+              }}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }
+          sx={{ mb: 2 }}
+        >
+          New Question Generated!
+        </Alert>
+      </Collapse>
+      <Collapse in={errorOpen}>
+        <Alert
+          color="error"
+          action={
+            <IconButton
+              aria-label="close"
+              color="error"
+              size="small"
+              onClick={() => {
+                setErrorOpen(false);
+              }}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }
+          sx={{ mb: 2 }}
+        >
+          Error: {error.message}
+        </Alert>
+      </Collapse>
       <CardContent>
         <Typography
           sx={{ display: "flex", justifyContent: "center", mb: 3 }}
@@ -101,20 +146,13 @@ export default function Config(props) {
             id={"combo-box-demo" + quizData.subject}
             options={quizData.subject === "Movie" ? top100Films : top100actor}
             sx={{ width: 300 }}
-            value={value}
-            onChange={(event, newValue) => {
-              setValue(newValue);
-            }}
-            inputValue={inputValue}
+            inputValue={textInput}
             onInputChange={(event, newInputValue) => {
-              setInputValue(newInputValue);
+              setTextInput(newInputValue);
+              console.log("Inputvalue: " + textInput);
             }}
             renderInput={(params) => (
-              <TextField
-                {...params}
-                value={textInput}
-                label={quizData.subject}
-              />
+              <TextField {...params} label={quizData.subject} />
             )}
           />
           <LoadingButton
@@ -141,18 +179,30 @@ export default function Config(props) {
           }
           label="display"
         />
-        <Box sx={{ pt: 3, mt: 3 }} hidden={!disp}>
-          {Object.values(quizData.questions).map((question) => (
-            <Box>
-              <Card
-                variant="outlined"
-                sx={{ pt: 3, pb: 3, pl: 3, pr: 3, mb: 3, ml: 3, mr: 3 }}
-              >
-                <Typography>{question[0]}</Typography>
-                <Typography>{question[1]}</Typography>
-              </Card>
-            </Box>
-          ))}
+        <Box
+          hidden={!disp}
+          sx={{
+            width: "100%",
+            height: 400,
+          }}
+        >
+          <List
+            sx={{
+              bgcolor: "background.paper",
+              position: "fix",
+              overflow: "auto",
+              maxHeight: 375,
+            }}
+          >
+            {Object.values(quizData.questions).map((question) => (
+              <ListItem>
+                <Card variant="outlined" sx={{ pt: 3, pb: 3, pl: 3, pr: 3 }}>
+                  <Typography>{question[0]}</Typography>
+                  <Typography>{question[1]}</Typography>
+                </Card>
+              </ListItem>
+            ))}
+          </List>
         </Box>
       </CardContent>
       <CardActions sx={{ display: "flex", justifyContent: "center" }}>

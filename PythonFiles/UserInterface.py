@@ -1,12 +1,4 @@
 import MovieActorInformation
-def capitilize(input):
-    splited = input.split(" ")
-    tmp = ""
-    for stringPart in splited:
-        tmp += stringPart.capitalize() + " "
-    return tmp.strip()
-
-
 
 def __main__():
     print("************************\n****IMPORTANT NOTICE****\n************************")
@@ -19,13 +11,11 @@ def __main__():
     while("3" not in choice):
         if("1" in choice):
             print("Enter an Actor to get questions about.")
-            actor = capitilize(input())
-            json = MovieActorInformation.createQuizActor(actor)
+            json = MovieActorInformation.createQuizActor(input())
             print(json)
         elif("2" in choice):
             print("Enter an Movie to get questions about.")
-            movie = capitilize(input())
-            json = MovieActorInformation.createQuizMovie(movie)
+            json = MovieActorInformation.createQuizMovie(input())
             print(json)
         else:
             print("Invalid input.")

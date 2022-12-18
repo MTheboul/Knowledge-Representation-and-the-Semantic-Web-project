@@ -2,6 +2,10 @@ import json
 import urllib.request
 import urllib.parse
 
+# Google knowledge graf is only used for its ability to handle incomplete input
+# and is used to take incomplete input and return the most likly search term in
+# correct format. No use of the knowledge graf is taking place and therefor not
+# in the rapport.
 def getMostLiklySearchTerm(term, type):
     api_key = "AIzaSyAaMn7L_OOrfDdGk4WpNNJF2PGYbyekoNQ"
     service_url = 'https://kgsearch.googleapis.com/v1/entities:search'

@@ -49,7 +49,7 @@ function Menu() {
                     component="div"
                     align="center"
                   >
-                    Generate a Quiz
+                    Generate questions about:
                   </Typography>
                 </CardContent>
               </Card>

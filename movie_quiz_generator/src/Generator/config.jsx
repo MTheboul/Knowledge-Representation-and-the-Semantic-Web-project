@@ -148,8 +148,17 @@ export default function Config(props) {
             sx={{ width: 300 }}
             inputValue={textInput}
             onInputChange={(event, newInputValue) => {
-              setTextInput(newInputValue);
-              console.log("Inputvalue: " + textInput);
+              if (newInputValue !== null) {
+                setTextInput(newInputValue);
+                console.log("Inputvalue: " + newInputValue);
+              }
+            }}
+            value={textInput}
+            onChange={(event, newValue) => {
+              if (newValue !== null) {
+                console.log("value: " + newValue);
+                setTextInput(newValue);
+              }
             }}
             renderInput={(params) => (
               <TextField {...params} label={quizData.subject} />
